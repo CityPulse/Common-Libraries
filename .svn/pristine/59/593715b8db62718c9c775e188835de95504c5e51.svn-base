@@ -1,0 +1,63 @@
+/**
+ *
+ */
+package citypulse.commons.contextual_filtering.contextual_event_request;
+
+import java.io.IOException;
+
+import citypulse.commons.contextual_filtering.city_event_ontology.Area;
+
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
+
+/**
+ * @author Thu-Le Pham
+ * @date 1 Oct 2015
+ */
+public class PlaceAdapter extends TypeAdapter<Place> {
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.google.gson.TypeAdapter#write(com.google.gson.stream.JsonWriter,
+	 * java.lang.Object)
+	 */
+	@Override
+	public void write(JsonWriter jsonWriter, Place value) throws IOException {
+		if (value == null) {
+			jsonWriter.nullValue();
+			return;
+		}
+
+		jsonWriter.value(value.toJSON());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.google.gson.TypeAdapter#read(com.google.gson.stream.JsonReader)
+	 */
+	@Override
+	public Place read(JsonReader jsonReader) throws IOException {
+		if (jsonReader.peek() == JsonToken.NULL) {
+			jsonReader.nextNull();
+			return null;
+		}
+
+		final String value = jsonReader.nextString();
+
+		if (value.contains("\"type\":\"POINT\"")) {
+			return new Gson().fromJson(value, Point.class);
+		} else if (value.contains("\"type\":\"ROUTE\"")) {
+			return new Gson().fromJson(value, Route.class);
+		} else if (value.contains("\"type\":\"AREA\"")) {
+			return new Gson().fromJson(value, Area.class);
+		}
+
+		return null;
+	}
+
+}
