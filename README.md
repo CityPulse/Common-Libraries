@@ -6,6 +6,7 @@ This package includes java classes which represent the models of input and outpu
   Input: ReasoningRequest.java
   
   Output: 
+      
       + For the Parking space module: AnswerParkingSpaces.java
       
       + For the Routing module: AnswerTravelPlanner.java
